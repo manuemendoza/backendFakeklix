@@ -67,4 +67,4 @@ module.exports.getRentalId = async (req, res) => {
             message: error.message
         });
     }
-}; hola
+}; 
