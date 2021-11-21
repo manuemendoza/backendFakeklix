@@ -129,7 +129,8 @@ module.exports.loginUser = async (req, res) => {
                         _id: user._id,
                         role: user.role,
                         name:user.name,
-                        username:user.username
+                        surname:user.surname,
+                        email:user.email
                     }, process.env.PRIVATE_KEY, {
                         expiresIn: '24h'
                     });
