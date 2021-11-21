@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 module.exports.createUser = async (req, res) => {
+    console.log(req.body)
     if (!req.body.password) {
         res.json({
             message: 'password is required'
@@ -13,7 +14,7 @@ module.exports.createUser = async (req, res) => {
         if (!req.token || req.token.role == 'user') {
             delete data.role;
         }
-        
+
         const user = new User(data);
 
         const salt = bcrypt.genSaltSync(8);
@@ -69,9 +70,9 @@ module.exports.getUserByKey = async (req, res) => {
     if (req.query.surname) query.surname = { $regex: new RegExp(req.query.surname, 'i') };
     if (req.query.mail) query.mail = { $regex: new RegExp(req.query.email, 'i') };
     if (req.query.role) query.role = req.query.role;
-    
-    if (req.token.role == 'user'){
-        query._id = req.token._id ;
+
+    if (req.token.role == 'user') {
+        query._id = req.token._id;
     }
     try {
         const user = await User.find(query);
@@ -91,7 +92,7 @@ module.exports.getUserByKey = async (req, res) => {
 }
 
 module.exports.getUserById = async (req, res) => {
-    const name = req.params.id ;
+    const name = req.params.id;
     try {
         const movie = await User.findById(name)
         if (movie) {
@@ -126,11 +127,13 @@ module.exports.loginUser = async (req, res) => {
                 if (validated) {
                     const token = jwt.sign({
                         _id: user._id,
-                        role: user.role
+                        role: user.role,
+                        name:user.name,
+                        username:user.username
                     }, process.env.PRIVATE_KEY, {
                         expiresIn: '24h'
                     });
-                    res.json(token);
+                    res.json({token:token});
                 } else {
                     res.json({
                         message: "invalid user or password"
