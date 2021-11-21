@@ -7,7 +7,7 @@ const checkToken = (req, res, next, requiredRole) => {
         let splitToken = req.headers['authorization'].split(' ');
         if (splitToken.length === 2) {
             token = splitToken[1];
-            
+
         }
     }
 
@@ -18,7 +18,9 @@ const checkToken = (req, res, next, requiredRole) => {
                 userToken.role == 'admin' ||
                 (req.path.startsWith('/users') && req.params.id == userToken._id) // perfil del propio usuario autenticado
             ) {
+
                 req.token = userToken;
+
                 next();
 
             } else {
