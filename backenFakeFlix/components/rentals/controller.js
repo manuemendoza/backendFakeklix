@@ -6,7 +6,7 @@ const moment = require('moment');
 module.exports.createRental = async (req, res) => {
     console.log(req.body)
 
-    const arrayMovie = req.body.movies;
+    const arrayMovie = req.body.movieId;
     const arrayPrice = await Promise.all(arrayMovie.map(async (value) => {
         try {
             const objectResult = await Movie.findById({ _id: value });
@@ -32,7 +32,7 @@ module.exports.createRental = async (req, res) => {
         newRental.expirationDate = moment().add(8, "days"),
             console.log(newRental.expirationDate + '15')
         await newRental.save();
-        res.status(404).json({ message: 'is good' })
+        res.status(200).json({ message: 'is good' })
     } catch (error) {
         console.log(error)
     }
