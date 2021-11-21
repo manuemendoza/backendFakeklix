@@ -4,27 +4,33 @@ const moment = require('moment');
 
 module.exports.createRental = async (req, res) => {
 
-    const arrayMovie = req.body.movieId
+    const arrayMovie = req.body.movies;
     const arrayPrice = await Promise.all(arrayMovie.map(async (value) => {
         try {
             const objectResult = await Movie.findById({ _id: value });
-            return objectResult.price
+            return objectResult.price;
         } catch (e) {
-            console.log(e)
+            console.error(e);
+            res.status(400).json({
+                message: 'movie ' + value + ' not found'
+            });
         }
     })
     )
-    let result = arrayPrice.reduce((a, b) => a + b)
+    let result = arrayPrice.reduce((a, b) => a + b);
     try {
-        console.log(typeof req.body.userId)
+        console.log(typeof req.body.userId);
         const newRental = new Rental(req.body);
-        newRental.totalPrice = result
-        newRental.userID= req.token._id
-        newRental.rentalDate = moment()
-        newRental.expirationDate = newRental.rentalDate.clone().add(8, "days"),
+        newRental.totalPrice = result;
+        newRental.userID= req.body.userId;
+        newRental.rentalDate = moment();
+        newRental.expirationDate = newRental.rentalDate.clone().add(8, "days");
             await newRental.save();
-        res.status(404).json({ message: 'is good' })
+        res.status(200).json({ message: 'is good' });
     } catch (error) {
+        res.status(404).json({
+            message: "Rental not created"
+        });
     }
 };
 
