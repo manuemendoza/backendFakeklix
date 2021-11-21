@@ -16,7 +16,6 @@ module.exports.createUser = async (req, res) => {
         }
 
         const user = new User(data);
-
         const salt = bcrypt.genSaltSync(8);
         const hash = bcrypt.hashSync(req.body.password, salt);
         user.password = hash;
@@ -30,7 +29,6 @@ module.exports.createUser = async (req, res) => {
             } else {
                 res.status(500).json({ message: error.message });
             }
-
         }
     }
 }
@@ -66,16 +64,9 @@ module.exports.getUserCollection = async (req, res) => {
 module.exports.getUserByKey = async (req, res) => {
     let query = {};
 
-    if (req.query.name) query.name = { $regex: new RegExp(req.query.name, 'i') };
-    if (req.query.surname) query.surname = { $regex: new RegExp(req.query.surname, 'i') };
-    if (req.query.mail) query.mail = { $regex: new RegExp(req.query.email, 'i') };
-    if (req.query.role) query.role = req.query.role;
-
-    if (req.token.role == 'user') {
-        query._id = req.token._id;
-    }
-    try {
+      try {
         const user = await User.find(query);
+      
         res.json(user);
     } catch (error) {
         console.error(error);
@@ -128,12 +119,12 @@ module.exports.loginUser = async (req, res) => {
                     const token = jwt.sign({
                         _id: user._id,
                         role: user.role,
-                        name:user.name,
-                        username:user.username
+                        name: user.name,
+                        username: user.username
                     }, process.env.PRIVATE_KEY, {
                         expiresIn: '24h'
                     });
-                    res.json({token:token});
+                    res.json({ token: token });
                 } else {
                     res.json({
                         message: "invalid user or password"

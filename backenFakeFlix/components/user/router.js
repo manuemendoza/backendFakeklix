@@ -3,7 +3,7 @@ const controller = require ('./controller.js');
 const auth = require('../../auth');
 
 router.get('/:id', auth.checkAdminOrOwn, controller.getUserById);
-router.get('/', auth.checkUser, controller.getUserByKey);
+router.get('/',  controller.getUserByKey);
 // router.get('/', auth.checkAdminOrOwn, controller.getUserCollection);// buscar todos los usario (SOLO ADMIN) 
 router.post('/', controller.createUser);  //crear usuario
 router.post('/login', controller.loginUser); //login usuario
