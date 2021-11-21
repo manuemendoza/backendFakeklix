@@ -3,7 +3,7 @@ const controller = require ('./controller');
 const auth = require('../../auth');
 
 
-router.post('/', auth.checkUser, controller.createRental);
+router.post('/',  controller.createRental);
 router.get('/:id', auth.checkUser, controller.getRentalId);
 router.get('/',  controller.getRentals);
 

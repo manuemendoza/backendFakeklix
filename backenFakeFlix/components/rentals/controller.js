@@ -27,8 +27,8 @@ module.exports.createRental = async (req, res) => {
         newRental.rentalDate = moment()
         console.log(newRental.rentalDate)
         newRental.expirationDate = moment().add(8, "days"),
-            console.log(newRental.expirationDate + '15')
-        await newRental.save();
+
+            await newRental.save();
         res.status(404).json({ message: 'is good' })
     } catch (error) {
         console.log(error)
@@ -50,11 +50,11 @@ module.exports.getRentals = async (req, res) => {
             select:
                 'name email',
         })
-        .populate({
-            path: 'movieId',
-            select:
-                'title',
-        })
+            .populate({
+                path: 'movieId',
+                select:
+                    'title',
+            })
         res.json(rentals);
 
     } catch (error) {
