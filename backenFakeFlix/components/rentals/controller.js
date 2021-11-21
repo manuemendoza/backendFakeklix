@@ -1,8 +1,10 @@
 const Rental = require('./model');
 const Movie = require('../movie/model');
+const User = require('../user/model')
 const moment = require('moment');
 
 module.exports.createRental = async (req, res) => {
+    console.log(req.body)
 
     const arrayMovie = req.body.movieId
     const arrayPrice = await Promise.all(arrayMovie.map(async (value) => {
@@ -19,35 +21,51 @@ module.exports.createRental = async (req, res) => {
         console.log(typeof req.body.userId)
         const newRental = new Rental(req.body);
         newRental.totalPrice = result
-        newRental.userID= req.token._id
+        console.log(newRental.totalPrice)
+        newRental.userID = req.body.userId
+        console.log(newRental.userID)
         newRental.rentalDate = moment()
-        newRental.expirationDate = newRental.rentalDate.clone().add(8, "days"),
-            await newRental.save();
+        console.log(newRental.rentalDate)
+        newRental.expirationDate = moment().add(8, "days"),
+            console.log(newRental.expirationDate + '15')
+        await newRental.save();
         res.status(404).json({ message: 'is good' })
     } catch (error) {
+        console.log(error)
     }
 };
 
 module.exports.getRentals = async (req, res) => {
-    let filter = {} ;
-    
-    if (req.token.role == 'user') {
-        filter.userId = req.token._id        
-    }
+    console.log('llego aqui')
+
+    // let filter = {};
+
+    // // if (req.token.role == 'user') {
+    // //     filter.userId = req.token._id        
+    // // }
 
     try {
-        const rentals = await Rental.find(filter);
+        const rentals = await Rental.find().populate({
+            path: 'userId',
+            select:
+                'name email',
+        })
+        .populate({
+            path: 'movieId',
+            select:
+                'title',
+        })
         res.json(rentals);
-        
+
     } catch (error) {
-        res.status(500).json({message: error.message})
+        res.status(500).json({ message: error.message })
     }
-}; 
+};
 
 module.exports.getRentalId = async (req, res) => {
-
+    console.log('he entrado')
     try {
-        
+
         const rental = await Rental.findById(req.params.id);
 
         if (!rental) {
@@ -67,4 +85,4 @@ module.exports.getRentalId = async (req, res) => {
             message: error.message
         });
     }
-}; 
+};
