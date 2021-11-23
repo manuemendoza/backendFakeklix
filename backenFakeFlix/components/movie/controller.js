@@ -35,8 +35,16 @@ module.exports.getMovieByKey = async (req, res) => {
     if (req.query.directors) {
         query.directors = { $regex: new RegExp(req.query.directors, 'i') };
     }
-    if (req.query.actors) {
-        query.year = { $regex: new RegExp(req.query.year, 'i') };
+    if (req.query.year) {
+        query.year = req.query.year;
+    }
+    if (req.query.search) {
+        query.$or = [
+            { title: { $regex: new RegExp(req.query.search, 'i') } },
+            { genres: { $regex: new RegExp(req.query.search, 'i') } },
+            { actors: { $regex: new RegExp(req.query.search, 'i') } },
+            { directors: { $regex: new RegExp(req.query.search, 'i') } }
+        ];
     }
     
     try {

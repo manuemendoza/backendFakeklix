@@ -5,6 +5,8 @@ const auth = require('../../auth');
 
 router.post('/',  controller.createRental);
 router.get('/:id', auth.checkUser, controller.getRentalId);
-router.get('/', auth.checkUser, controller.getRentals);
+router.get('/',  controller.getRentals);
+router.put('/',  controller.modifyRental);
+router.delete('/',  controller.deleteRental);
 
 module.exports = router;

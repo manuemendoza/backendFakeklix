@@ -6,19 +6,22 @@ const moment = require('moment');
 module.exports.createRental = async (req, res) => {
     console.log(req.body)
 
-    const arrayMovie = req.body.movieId
+    const arrayMovie = req.body.movieId;
     const arrayPrice = await Promise.all(arrayMovie.map(async (value) => {
         try {
             const objectResult = await Movie.findById({ _id: value });
-            return objectResult.price
+            return objectResult.price;
         } catch (e) {
-            console.log(e)
+            console.error(e);
+            res.status(400).json({
+                message: 'movie ' + value + ' not found'
+            });
         }
     })
     )
-    let result = arrayPrice.reduce((a, b) => a + b)
+    let result = arrayPrice.reduce((a, b) => a + b);
     try {
-        console.log(typeof req.body.userId)
+        console.log(typeof req.body.userId);
         const newRental = new Rental(req.body);
         newRental.totalPrice = result
         console.log(newRental.totalPrice)
@@ -27,9 +30,9 @@ module.exports.createRental = async (req, res) => {
         newRental.rentalDate = moment()
         console.log(newRental.rentalDate)
         newRental.expirationDate = moment().add(8, "days"),
-
-            await newRental.save();
-        res.status(404).json({ message: 'is good' })
+        console.log(newRental.expirationDate + '15')
+        await newRental.save();
+        res.status(200).json({ message: 'is good' })
     } catch (error) {
         console.log(error)
     }
@@ -84,5 +87,55 @@ module.exports.getRentalId = async (req, res) => {
         res.status(500).json({
             message: error.message
         });
+    }
+};
+
+module.exports.modifyRental = async (req, res) => {
+
+    try {
+        const Rental = await Rental.findById(req.params.id);
+        if (Rental) {
+            const rentalUpdate = await Rental.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            res.status(200).json(
+                rentalUpdate
+                );
+        } else {
+            res.status(404).json({
+                message: "movie not found"
+            },);
+        }
+    } catch (error) {
+        console.error(error);
+        if (error.name == "ValidationError") {
+            res.satus(400).json({
+                menssage: error.message
+            },);
+        } else {
+            res.status(500).json({
+                message: error.message
+            },);
+        }
+    }
+};
+
+module.exports.deleteRental = async (req, res) => {
+    
+    try {
+        const rental = await Rental.findById(req.params.id);//id de la rental
+        if (rental) {
+            const rentalDelete = await Rental.findByIdAndDelete(req.params.id);
+            
+            res.status(200).json({
+                message: 'rental deleted'
+            });
+        } else {
+            res.status(404).json({
+                message: "rental not found"
+            },);
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        },);
     }
 };
