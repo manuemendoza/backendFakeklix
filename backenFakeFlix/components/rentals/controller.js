@@ -89,3 +89,53 @@ module.exports.getRentalId = async (req, res) => {
         });
     }
 };
+
+module.exports.modifyRental = async (req, res) => {
+
+    try {
+        const Rental = await Rental.findById(req.params.id);
+        if (Rental) {
+            const rentalUpdate = await Rental.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            res.status(200).json(
+                rentalUpdate
+                );
+        } else {
+            res.status(404).json({
+                message: "movie not found"
+            },);
+        }
+    } catch (error) {
+        console.error(error);
+        if (error.name == "ValidationError") {
+            res.satus(400).json({
+                menssage: error.message
+            },);
+        } else {
+            res.status(500).json({
+                message: error.message
+            },);
+        }
+    }
+};
+
+module.exports.deleteRental = async (req, res) => {
+    
+    try {
+        const rental = await Rental.findById(req.params.id);//id de la rental
+        if (rental) {
+            const rentalDelete = await Rental.findByIdAndDelete(req.params.id);
+            
+            res.status(200).json({
+                message: 'rental deleted'
+            });
+        } else {
+            res.status(404).json({
+                message: "rental not found"
+            },);
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        },);
+    }
+};
