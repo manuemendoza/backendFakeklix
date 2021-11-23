@@ -63,10 +63,10 @@ module.exports.getRentals = async (req, res) => {
 };
 
 module.exports.getRentalId = async (req, res) => {
-    console.log('he entrado')
+ 
     try {
 
-        const rental = await Rental.findById(req.params.id);
+        const rental = await Rental.find({userId: req.params.id});
 
         if (!rental) {
             res.status(404).json({
