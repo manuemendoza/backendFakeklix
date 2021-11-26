@@ -1,1 +1,1 @@
-web: node backenFakeFlix\app.js
+web: node backenFakeFlix/app.js
