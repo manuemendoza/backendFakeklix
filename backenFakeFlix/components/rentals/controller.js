@@ -89,3 +89,24 @@ module.exports.getRentalId = async (req, res) => {
         });
     }
 };
+
+module.exports.deleteRentalId = async (req, res) => {
+    try {
+        const rental = await Rental.findById(req.params.id);
+        if (rental) {
+            const rentalDelete = await Rental.findByIdAndDelete(rental);
+            res.status(200).json({
+                message: 'rental deleted'
+            });
+        } else {
+            res.status(400).json({
+                message: 'rental not found'
+            })
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: error.message
+        })
+    }
+};
