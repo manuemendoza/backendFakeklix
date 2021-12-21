@@ -53,11 +53,11 @@ module.exports.getRentals = async (req, res) => {
             select:
                 'name email',
         })
-        .populate({
-            path: 'movieId',
-            select:
-                'title',
-        })
+            .populate({
+                path: 'movieId',
+                select:
+                    'title',
+            })
         res.json(rentals);
 
     } catch (error) {
@@ -98,44 +98,44 @@ module.exports.modifyRental = async (req, res) => {
             const rentalUpdate = await Rental.findByIdAndUpdate(req.params.id, req.body, { new: true });
             res.status(200).json(
                 rentalUpdate
-                );
+            );
         } else {
             res.status(404).json({
                 message: "movie not found"
-            },);
+            });
         }
     } catch (error) {
         console.error(error);
         if (error.name == "ValidationError") {
             res.satus(400).json({
                 menssage: error.message
-            },);
+            });
         } else {
             res.status(500).json({
                 message: error.message
-            },);
+            });
         }
     }
 };
 
 module.exports.deleteRental = async (req, res) => {
-    
+    console.log('estoy entrando')
+    console.log(req.params.id)
     try {
-        const rental = await Rental.findById(req.params.id);//id de la rental
-        if (rental) {
-            const rentalDelete = await Rental.findByIdAndDelete(req.params.id);
+        // const rental = await Rental.findById(req.params.id);//id de la rental
+        console.log(req.params.id)
+        const rentalDelete = await Rental.findByIdAndDelete(req.params.id);
+        if(rentalDelete){
             
             res.status(200).json({
-                message: 'rental deleted'
+                message: 'rental is delete'
             });
-        } else {
-            res.status(404).json({
-                message: "rental not found"
-            },);
         }
+    
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        },);
-    }
+    res.status(500).json({
+        message: error.message,
+        message2: "rental not found"
+    });
+}
 };
