@@ -1,5 +1,5 @@
 const router = require ('express').Router();
-const controller = require ('./controller.js');
+// const controller = require ('./controller.js');
 const auth = require('../../auth');
 
 router.get('/:id', auth.checkAdminOrOwn, controller.getUserById);

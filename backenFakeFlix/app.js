@@ -12,7 +12,12 @@ require('dotenv').config();
 connection();
 
 const app = express();
+<<<<<<< HEAD
 app.use(function (req, res, next) {
+=======
+
+app.use(function(req, res, next) {
+>>>>>>> 02fcf8062f15eb4b402d8dec3b0f0b2f0e6b1714
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();

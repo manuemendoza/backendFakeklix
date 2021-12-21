@@ -30,7 +30,7 @@ module.exports.createRental = async (req, res) => {
         newRental.rentalDate = moment()
         console.log(newRental.rentalDate)
         newRental.expirationDate = moment().add(8, "days"),
-            console.log(newRental.expirationDate + '15')
+        console.log(newRental.expirationDate + '15')
         await newRental.save();
         res.status(200).json({ message: 'is good' })
     } catch (error) {
@@ -66,10 +66,10 @@ module.exports.getRentals = async (req, res) => {
 };
 
 module.exports.getRentalId = async (req, res) => {
-    console.log('he entrado')
+ 
     try {
 
-        const rental = await Rental.findById(req.params.id);
+        const rental = await Rental.find({userId: req.params.id});
 
         if (!rental) {
             res.status(404).json({
